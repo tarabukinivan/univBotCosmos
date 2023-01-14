@@ -65,7 +65,7 @@ const start = () => {
   start()
   let tmp=0;
   cron.schedule('*/2 * * * * *', async () => {    
-    tmp = shellexe(`curl -s http://0.0.0.0:56657/net_info |jq '.result .n_peers'  | xargs`)      
+    tmp = shellexe(`curl -s http://0.0.0.0:${rport}/net_info |jq '.result .n_peers'  | xargs`)      
       if(tmp < 2){
         bot.sendMessage(chatId, 'Peers not found. Check the node');
       }
