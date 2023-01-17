@@ -55,7 +55,7 @@ const start = () => {
       }
 
       if(text === '/peers'){
-        let tmp = shellexe(`curl -s http://0.0.0.0:${rport}/net_info | grep n_peers`)
+        let tmp = shellexe(`curl -s http://0.0.0.0:${rport}/net_info | jq | grep n_peers`)
         return bot.sendMessage(chatId, 'number of peers:\n\n' + tmp);
       }
 
