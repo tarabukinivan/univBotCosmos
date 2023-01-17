@@ -1,4 +1,4 @@
-# Бот для задачи Neutron #
+9# Бот для задачи Neutron #
 ## Порядок установки:
 
 1. обновляем пакеты
@@ -38,6 +38,7 @@ CHATID=<chat_id>
 RPC_PORT=<port>
 BIN=neutrond
 VALOPER=<valoper_address>
+LASTPROPOSAL=0
 ```
 > TOKEN - телеграм токен <br>
 > valoper_address - валопер адрес <br>
