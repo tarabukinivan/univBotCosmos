@@ -1,12 +1,13 @@
 const TelegramApi = require('node-telegram-bot-api')
 require('dotenv').config()
-
 const bot = new TelegramApi(process.env.BOT_TOKEN, {polling: true})
 const chatId = process.env.CHATID
 const valoper = process.env.VALOPER
 const rport = process.env.RPC_PORT
 const binf = process.env.BIN
+let lastprop = parseInt(process.env.LASTPROPOSAL)
 const cron = require("node-cron");
+const settime = require('./requests/settime')
 const shellexe = require('./requests/func.js')
 bot.setMyCommands([
     {command: '/df', description: 'Hard disk information'},
@@ -29,7 +30,7 @@ const start = () => {
         //neutrond query staking validator -o json neutronvaloper1x9hshettlcuc2ms5p97n65tn029hu6dhjcj9tl
         return bot.sendMessage(chatId, 'Validator Info:\n\n' + tmp);
       }
-// .id иногда бывает proposal_id
+
       if(text === '/proposals'){      
         let tmp = shellexe(`${binf} query gov proposals -o json --limit=1000 --node tcp://0.0.0.0:${rport} | jq '.proposals[]' | jq -r  '.id + " " + .status'`)
         return bot.sendMessage(chatId, 'Validator Info:\n\n' + tmp);
@@ -75,4 +76,15 @@ const start = () => {
         bot.sendMessage(chatId, 'Node jailed');
       }
       
+      let tmpprop = shellexe(`${binf} query gov proposals -o json --limit=1000 --node tcp://0.0.0.0:${rport} | jq '.proposals[]' | jq -r  '.id + " %@@@@@% " + .status + " %@@@@@% " + .metadata'`)
+       let tmpproparray = tmpprop.split('\n')
+       tmpproparray.pop()
+       let tmpproparraylast=tmpproparray[tmpproparray.length-1].split('%@@@@@%')
+       let tmpproparraylastInt = parseInt(tmpproparraylast[0])
+       if(tmpproparraylastInt > lastprop){
+          lastprop = tmpproparraylastInt
+          //сообщение о новом пропозале
+          bot.sendMessage(chatId, `New propozal ${tmpproparraylastInt} : ${tmpproparraylast[2]}`);
+          settime(tmpproparraylastInt,'prop')
+       }
 });
