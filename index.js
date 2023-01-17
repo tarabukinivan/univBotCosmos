@@ -29,7 +29,7 @@ const start = () => {
         //neutrond query staking validator -o json neutronvaloper1x9hshettlcuc2ms5p97n65tn029hu6dhjcj9tl
         return bot.sendMessage(chatId, 'Validator Info:\n\n' + tmp);
       }
-
+// .id иногда бывает proposal_id
       if(text === '/proposals'){      
         let tmp = shellexe(`${binf} query gov proposals -o json --limit=1000 --node tcp://0.0.0.0:${rport} | jq '.proposals[]' | jq -r  '.id + " " + .status'`)
         return bot.sendMessage(chatId, 'Validator Info:\n\n' + tmp);
