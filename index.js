@@ -31,7 +31,7 @@ const start = () => {
       }
 
       if(text === '/proposals'){      
-        let tmp = shellexe(`${binf} query gov proposals -o json --limit=1000 --node tcp://0.0.0.0:${rport} | jq '.proposals[]' | jq -r  '.proposal_id + " " + .status'`)
+        let tmp = shellexe(`${binf} query gov proposals -o json --limit=1000 --node tcp://0.0.0.0:${rport} | jq '.proposals[]' | jq -r  '.id + " " + .status'`)
         return bot.sendMessage(chatId, 'Validator Info:\n\n' + tmp);
       }
 
