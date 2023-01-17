@@ -43,6 +43,7 @@ LASTPROPOSAL=0
 > TOKEN - телеграм токен <br>
 > valoper_address - валопер адрес <br>
 > chat_id - id чата <br>
+> bin - бинарный файл
 > port - порт ноды, по умолчанию 26657
 
 >> где взять TOKEN и chat_id можете посмотреть в статье [Настройка телеграм бота](https://nodera.org/panic_bot#gugm)
