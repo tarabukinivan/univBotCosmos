@@ -12,7 +12,7 @@ git clone https://github.com/tarabukinivan/univBotNeutron.git
 если нужно переименовать папку univBotNeutron в другую можно например, так:
 git clone https://github.com/tarabukinivan/univBotNeutron.git marsbot
 ```
-3. Устанавливаем nodejs и npm
+3. Устанавливаем nodejs и npm, если не установлено
 ```
 curl -sL https://deb.nodesource.com/setup_16.x | sudo -E bash - && \
 sudo apt-get install nodejs -y && \
