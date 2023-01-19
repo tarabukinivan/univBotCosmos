@@ -37,7 +37,6 @@ nano .env
 ```
 BOT_TOKEN=<TOKEN>
 CHATID=<chat_id>
-RPC_PORT=<port>
 BIN=neutrond
 VALOPER=<valoper_address>
 LASTPROPOSAL=0
