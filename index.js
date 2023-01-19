@@ -64,7 +64,7 @@ const start = () => {
         return bot.sendMessage(chatId, 'RAM Information:\n\n' + cuttext(tmp));
       }
       if(text === '/status'){ 
-       let tmp = shellexe(`${binf} status --node ${rpc} | jq`)
+       let tmp = shellexe(`${binf} status --node ${rpc} 2>&1 | jq`)
         return bot.sendMessage(chatId, 'Status:\n\n' + cuttext(tmp));
       }
       
