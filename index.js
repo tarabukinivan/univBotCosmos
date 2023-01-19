@@ -94,7 +94,7 @@ const start = () => {
         bot.sendMessage(chatId, 'Node jailed');
       }
       
-      let tmpprop = shellexe(`${binf} query gov proposals -o json --limit=1000 --node ${rpc} | jq '.proposals[]' | jq -r  '.${propkey} + " %@@@@@% " + .status + " %@@@@@% " + .metadata'`)
+      let tmpprop = shellexe(`${binf} query gov proposals -o json --limit=1000 --node ${rpc} | jq '.proposals[]' | jq -r  '.${propkey} + " %@@@@@% " + .status + " %@@@@@% " + .content.title'`)
       
       
       let tmpproparray = tmpprop.split('\n')
