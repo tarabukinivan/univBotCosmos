@@ -47,7 +47,7 @@ const start = () => {
       }
 
       if(text === '/proposals'){      
-        let tmp = shellexe(`${binf} query gov proposals -o json --limit=1000 | jq '.proposals[]' | jq -r  '.id + " " + .status'`)
+        let tmp = shellexe(`${binf} query gov proposals -o json --limit=1000 | jq '.proposals[]' | jq -r  '.${propkey} + " " + .status'`)
         return bot.sendMessage(chatId, 'Proposals:\n\n' + tmp);
       }
 
@@ -94,7 +94,7 @@ const start = () => {
         bot.sendMessage(chatId, 'Node jailed');
       }
       
-      let tmpprop = shellexe(`${binf} query gov proposals -o json --limit=1000 --node ${rpc} | jq '.proposals[]' | jq -r  '.id + " %@@@@@% " + .status + " %@@@@@% " + .metadata'`)
+      let tmpprop = shellexe(`${binf} query gov proposals -o json --limit=1000 --node ${rpc} | jq '.proposals[]' | jq -r  '.${propkey} + " %@@@@@% " + .status + " %@@@@@% " + .metadata'`)
       
       
       let tmpproparray = tmpprop.split('\n')
