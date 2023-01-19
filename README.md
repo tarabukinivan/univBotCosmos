@@ -8,6 +8,8 @@ sudo apt update && sudo apt upgrade -y
 2. скачиваем репозиторий
 ```
 git clone https://github.com/tarabukinivan/univBotNeutron.git
+или переименовать папку
+git clone https://github.com/tarabukinivan/univBotNeutron.git marsbot
 ```
 3. Устанавливаем nodejs и npm
 ```
