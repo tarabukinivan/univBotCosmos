@@ -1,13 +1,14 @@
 const TelegramApi = require('node-telegram-bot-api')
 require('dotenv').config()
 const bot = new TelegramApi(process.env.BOT_TOKEN, {polling: true})
-const chatId = '416844240'
+const chatId = process.env.CHATID
 const binf = process.env.BIN
 const valoper = process.env.VALOPER
 let lastprop = parseInt(process.env.LASTPROPOSAL)
 const cron = require("node-cron");
 const settime = require('./requests/settime')
 const shellexe = require('./requests/func.js')
+const cuttext = require('./requests/cuttext.js')
 bot.setMyCommands([
     {command: '/df', description: 'Hard disk information'},
     {command: '/free', description: 'RAM Information'}, 
@@ -34,40 +35,42 @@ console.log("valoper="+valoper)
 const propcol = shellexe(`${binf} query gov proposals -o json --limit=1 | jq '.proposals[]' | jq -r `)
 const propkey = Object.keys(JSON.parse(propcol))[0]
 console.log("proposalkey="+propkey)
+
 const start = () => {
     bot.on('message', async msg => {
       const text = msg.text;
+      console.log(msg)
       if(text === '/start'){
         return bot.sendMessage(chatId, `Welcome to bot!\nyour node ${binf}`)
       }
       
       if(text === '/infoval'){      
         let tmp = shellexe(`${binf} query staking validator -o json ${valoper} |jq`)        
-        return bot.sendMessage(chatId, 'Validator Info:\n\n' + tmp);
+        return bot.sendMessage(chatId, 'Validator Info:\n\n' + cuttext(tmp));
       }
 
       if(text === '/proposals'){      
         let tmp = shellexe(`${binf} query gov proposals -o json --limit=1000 | jq '.proposals[]' | jq -r  '.${propkey} + " " + .status'`)
-        return bot.sendMessage(chatId, 'Proposals:\n\n' + tmp);
+        return bot.sendMessage(chatId, 'Proposals:\n\n' + cuttext(tmp));
       }
 
       if(text === '/df'){      
         let tmp = shellexe('df -h')
-        return bot.sendMessage(chatId, 'Disk info:\n\n' + tmp);
+        return bot.sendMessage(chatId, 'Disk info:\n\n' + cuttext(tmp));
       }
   
       if(text === '/free'){      
         let tmp = shellexe(`free -h | column -c 110`)
-        return bot.sendMessage(chatId, 'RAM Information:\n\n' + tmp);
+        return bot.sendMessage(chatId, 'RAM Information:\n\n' + cuttext(tmp));
       }
       if(text === '/status'){ 
        let tmp = shellexe(`${binf} status --node ${rpc} | jq`)
-        return bot.sendMessage(chatId, 'Status:\n\n' + tmp);
+        return bot.sendMessage(chatId, 'Status:\n\n' + cuttext(tmp));
       }
       
       if(text === '/logs'){
         let tmp = shellexe(`journalctl -u ${binf} -n 30 -o cat | sed -r "s/\x1B\\[([0-9]{1,3}(;[0-9]{1,2})?)?[mGK]//g"`)
-        return bot.sendMessage(chatId, 'Last 5 line Logs:\n\n' + tmp);
+        return bot.sendMessage(chatId, 'Last 5 line Logs:\n\n' + cuttext(tmp));
       }
 
       if(text === '/peers'){
@@ -75,9 +78,11 @@ const start = () => {
         return bot.sendMessage(chatId, 'number of peers:\n\n' + tmp);
       }
 
-      return bot.sendMessage(chatId, `Unknown command trht`)
+      return bot.sendMessage(chatId, `Unknown command`)
+      
     })
   }
+  
   start()
   let tmp=0;
   cron.schedule('*/2 * * * * *', async () => {    
@@ -94,8 +99,8 @@ const start = () => {
         bot.sendMessage(chatId, 'Node jailed');
       }
       
-      let tmpprop = shellexe(`${binf} query gov proposals -o json --limit=1000 --node ${rpc} | jq '.proposals[]' | jq -r  '.${propkey} + " %@@@@@% " + .status + " %@@@@@% " + .content.title'`)
-      
+      let tmpprop = shellexe(`${binf} query gov proposals -o json --limit=1000 | jq '.proposals[]' | jq -r  '.${propkey} + " %@@@@@% " + .status + " %@@@@@% " + .content.title'`)
+      //console.log(tmpprop)
       
       let tmpproparray = tmpprop.split('\n')
       tmpproparray.pop()
