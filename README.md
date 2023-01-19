@@ -7,6 +7,7 @@ sudo apt update && sudo apt upgrade -y
 ```
 2. скачиваем репозиторий
 ```
+cd
 git clone https://github.com/tarabukinivan/univBotNeutron.git
 если нужно переименовать папку univBotNeutron в другую можно например, так:
 git clone https://github.com/tarabukinivan/univBotNeutron.git marsbot
