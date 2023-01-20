@@ -36,7 +36,7 @@ const propcol = shellexe(`${binf} query gov proposals -o json --limit=1 | jq '.p
 const propobj=JSON.parse(propcol)
 const propkey = Object.keys(propobj)[0]
 let proptitle='';
-if(Object.keys(propobj)['content']){
+if('content' in propobj){
   proptitle='.content.title'
 }else{
   proptitle='.messages[0].content.title'
