@@ -12,6 +12,9 @@ cd
 git clone https://github.com/tarabukinivan/univBotNeutron.git
 если нужно переименовать папку univBotNeutron в другую можно например, так:
 git clone https://github.com/tarabukinivan/univBotNeutron.git marsbot
+второй бот
+git clone https://github.com/tarabukinivan/univBotNeutron.git nibidbot
+и т.д.
 ```
 3. Устанавливаем nodejs и npm, если не установлено
 ```
@@ -23,7 +26,7 @@ echo -e "\nnodejs > $(node --version).\nnpm  >>> v$(npm --version).\n"
 
 > ![resultatnpm](https://user-images.githubusercontent.com/56988566/195841827-4764e964-0a8a-4ebd-b867-1cd641280008.png)
 
-4. переходим в папку проекта
+4. переходим в папку проекта (если не переимоновали)
 ```
 cd /$USER/univBotNeutron
 ```
@@ -43,14 +46,13 @@ BIN=neutrond
 VALOPER=<valoper_address>
 LASTPROPOSAL=0
 ```
-> TOKEN - телеграм токен <br>
+> TOKEN - телеграм токен (для каждого бота нужен новый)<br>
 > valoper_address - валопер адрес <br>
-> chat_id - id чата <br>
-> bin - бинарный файл
-> port - порт ноды, по умолчанию 26657
+> chat_id - id чата (куда будут приходить уведомления)<br>
+> bin - бинарный файл ноды
 
 >> где взять TOKEN и chat_id можете посмотреть в статье [Настройка телеграм бота](https://tarabukinivan.medium.com/%D1%81%D0%BE%D0%B7%D0%B4%D0%B0%D1%82%D1%8C-%D1%82%D0%BE%D0%BA%D0%B5%D0%BD-%D0%B4%D0%BB%D1%8F-%D1%82%D0%B5%D0%BB%D0%B5%D0%B3%D1%80%D0%B0%D0%BC-%D0%B1%D0%BE%D1%82%D0%B0-%D1%83%D0%B7%D0%BD%D0%B0%D1%82%D1%8C-id-chat-eddb844c6126)
-7. устанавливаем pm2 для запуска бота в фоне (если уже устанавливали не устанавливайте)
+7. устанавливаем pm2 глобально для запуска бота в фоне (если уже устанавливали не устанавливайте)
 ```
 npm i pm2 -g
 ```
