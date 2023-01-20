@@ -113,7 +113,8 @@ const start = () => {
       }
       let tmpprop = shellexe(`${binf} query gov proposals -o json --limit=1000 | jq '.proposals[]' | jq -r  '.${propkey} + " %@@@@@% " + .status + " %@@@@@% " + ${proptitle}'`)
       let tmpproparray = tmpprop.split('\n')
-      tmpproparray.pop()
+      
+      console.log(tmpproparray)
       let tmpproparraylast=tmpproparray[tmpproparray.length-1].split('%@@@@@%')
       console.log(tmpproparraylast)
       let tmpproparraylastInt = parseInt(tmpproparraylast[0])
