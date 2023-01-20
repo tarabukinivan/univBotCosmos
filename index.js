@@ -18,15 +18,24 @@ bot.setMyCommands([
     {command: '/peers', description: 'number of peers'},
     {command: '/infoval', description: 'Validator Info'},
   ])
-console.log('бинарник=' +binf)
-const nodestatus = shellexe(`${binf} status 2>&1 | jq`)
-
+console.log('binary=' +binf)
+try {
+  var nodestatus = shellexe(`${binf} status 2>&1 | jq`)
+} catch (e) {  
+  console.log(chatId, 'node not configured,\n\n error:  ' + e);
+  process.exit(1)
+}
+console.log("nodestatus:")
+console.log(nodestatus)
 if(nodestatus==false){
+  console.log("nodestatus="+nodestatus)
+  console.log(chatId, `node not configured,\n check status: \n  ${binf} status 2>&1 | jq`);
   bot.sendMessage(chatId, 'Node not working:  ' + `${binf} status |jq`);
+  process.exit(1)
 }
 
-const nosst = JSON.parse(nodestatus)
-const rpc=nosst.NodeInfo.other.rpc_address;
+const rpc = JSON.parse(nodestatus).NodeInfo.other.rpc_address;
+//const rpc=nosst.NodeInfo.other.rpc_address;
 
 const httprpc = rpc.replace("tcp", "http")
 console.log("rpc="+rpc)
@@ -95,26 +104,19 @@ const start = () => {
   start()
   let tmp=0;
   cron.schedule('*/2 * * * * *', async () => {    
-    //console.log('tmpprop')
-    //console.log(rport)
       tmp = shellexe(`curl -s ${httprpc}/net_info |jq '.result .n_peers'  | xargs`)  
-      //console.log(tmp) 
       if(tmp < 2){
         bot.sendMessage(chatId, 'Peers not found. Check the node');
       }
-      
       tmp = shellexe(`${binf} query staking validator -o json --node ${rpc} ${valoper} |jq .jailed`)
       if(tmp.trim() == "true"){
         bot.sendMessage(chatId, 'Node jailed');
       }
-      
       let tmpprop = shellexe(`${binf} query gov proposals -o json --limit=1000 | jq '.proposals[]' | jq -r  '.${propkey} + " %@@@@@% " + .status + " %@@@@@% " + ${proptitle}'`)
-      //console.log(tmpprop)
-      
       let tmpproparray = tmpprop.split('\n')
       tmpproparray.pop()
       let tmpproparraylast=tmpproparray[tmpproparray.length-1].split('%@@@@@%')
-      //console.log(tmpproparraylast)
+      console.log(tmpproparraylast)
       let tmpproparraylastInt = parseInt(tmpproparraylast[0])
       if(tmpproparraylastInt > lastprop){
         lastprop = tmpproparraylastInt
