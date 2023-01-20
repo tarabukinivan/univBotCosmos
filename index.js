@@ -66,8 +66,7 @@ const start = () => {
         return bot.sendMessage(chatId, 'Validator Info:\n\n' + cuttext(tmp));
       }
 
-      if(text === '/proposals'){
-        console.log(proptitle)
+      if(text === '/proposals'){        
         let tmp = shellexe(`${binf} query gov proposals -o json --limit=1000 | jq '.proposals[]' | jq -r  '.${propkey} + " " + .status +"   "+${proptitle}' `)
         return bot.sendMessage(chatId, 'Proposals:\n\n' + cuttext(tmp,true));
       }
