@@ -79,7 +79,7 @@ const start = () => {
       
       if(text === '/logs'){
         let tmp = shellexe(`journalctl -u ${binf} -n 30 -o cat | sed -r "s/\x1B\\[([0-9]{1,3}(;[0-9]{1,2})?)?[mGK]//g"`)
-        return bot.sendMessage(chatId, 'Last 5 line Logs:\n\n' + cuttext(tmp,true));
+        return bot.sendMessage(chatId, 'Last Logs:\n\n' + cuttext(tmp,true));
       }
 
       if(text === '/peers'){
