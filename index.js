@@ -33,7 +33,15 @@ console.log("rpc="+rpc)
 console.log("hrpc="+httprpc)
 console.log("valoper="+valoper)
 const propcol = shellexe(`${binf} query gov proposals -o json --limit=1 | jq '.proposals[]' | jq -r `)
-const propkey = Object.keys(JSON.parse(propcol))[0]
+const propobj=JSON.parse(propcol)
+const propkey = Object.keys(propobj)[0]
+let proptitle='';
+if(Object.keys(propobj)['content']){
+  proptitle='.content.title'
+}else{
+  proptitle='.messages[0].content.title'
+}
+console.log("proptitle="+proptitle)
 console.log("proposalkey="+propkey)
 
 const start = () => {
@@ -50,7 +58,8 @@ const start = () => {
       }
 
       if(text === '/proposals'){
-        let tmp = shellexe(`${binf} query gov proposals -o json --limit=1000 | jq '.proposals[]' | jq -r  '.${propkey} + " " + .status +"   " +.content.title'`)
+        console.log(proptitle)
+        let tmp = shellexe(`${binf} query gov proposals -o json --limit=1000 | jq '.proposals[]' | jq -r  '.${propkey} + " " + .status +"   "+${proptitle}' `)
         return bot.sendMessage(chatId, 'Proposals:\n\n' + cuttext(tmp,true));
       }
 
@@ -99,7 +108,7 @@ const start = () => {
         bot.sendMessage(chatId, 'Node jailed');
       }
       
-      let tmpprop = shellexe(`${binf} query gov proposals -o json --limit=1000 | jq '.proposals[]' | jq -r  '.${propkey} + " %@@@@@% " + .status + " %@@@@@% " + .content.title'`)
+      let tmpprop = shellexe(`${binf} query gov proposals -o json --limit=1000 | jq '.proposals[]' | jq -r  '.${propkey} + " %@@@@@% " + .status + " %@@@@@% " + ${proptitle}'`)
       //console.log(tmpprop)
       
       let tmpproparray = tmpprop.split('\n')
