@@ -19,7 +19,7 @@ bot.setMyCommands([
     {command: '/infoval', description: 'Validator Info'},
   ])
 console.log('бинарник=' +binf)
-const nodestatus = shellexe(`${binf} status |jq`)
+const nodestatus = shellexe(`${binf} status 2>&1 | jq`)
 
 if(nodestatus==false){
   bot.sendMessage(chatId, 'Node not working:  ' + `${binf} status |jq`);
@@ -39,7 +39,7 @@ console.log("proposalkey="+propkey)
 const start = () => {
     bot.on('message', async msg => {
       const text = msg.text;
-      console.log(msg)
+      //console.log(msg)
       if(text === '/start'){
         return bot.sendMessage(chatId, `Welcome to bot!\nyour node ${binf}`)
       }
@@ -64,7 +64,7 @@ const start = () => {
         return bot.sendMessage(chatId, 'RAM Information:\n\n' + cuttext(tmp));
       }
       if(text === '/status'){ 
-       let tmp = shellexe(`${binf} status --node ${rpc} | jq`)
+       let tmp = shellexe(`${binf} status --node ${rpc} 2>&1 | jq`)
         return bot.sendMessage(chatId, 'Status:\n\n' + cuttext(tmp));
       }
       
