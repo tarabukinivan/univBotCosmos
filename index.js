@@ -10,6 +10,7 @@ const settime = require('./requests/settime')
 const shellexe = require('./requests/func.js')
 const cuttext = require('./requests/cuttext.js')
 var sound = true;
+
 bot.setMyCommands([
     {command: '/df', description: 'Hard disk information'},
     {command: '/free', description: 'RAM Information'}, 
@@ -55,6 +56,11 @@ if('content' in propobj){
 }
 console.log("proptitle="+proptitle)
 console.log("proposalkey="+propkey)
+
+const publkey = shellexe(`${binf} debug pubkey $(${binf} tendermint show-validator)`)
+const addrval = publkey.split('\n')
+const HexAddr=addrval[0].replace("Address:","").trim();
+
 
 const start = () => {
     bot.on('message', async msg => {
@@ -115,8 +121,10 @@ const start = () => {
   
   start()
   let tmp=0;
-  
-  cron.schedule('*/2 * * * * *', async () => {   
+  let lasttmp=0;
+  let comfirmblock=2;
+  let propuski=0;
+  cron.schedule('*/4 * * * * *', async () => {   
     if(sound){     
       tmp = shellexe(`curl -s ${httprpc}/net_info |jq '.result .n_peers'  | xargs`)  
       if(tmp < 2){
@@ -138,6 +146,22 @@ const start = () => {
         //сообщение о новом пропозале
         bot.sendMessage(chatId, `New propozal ${tmpproparraylastInt} : ${tmpproparraylast[2]}`);
         settime(tmpproparraylastInt,'prop')
+      }
+      let last=shellexe(`${binf} status |jq '.SyncInfo .latest_block_height' | xargs`)
+      if(last>lasttmp){
+        lasttmp=last
+        comfirmblock=shellexe(`curl -s ${httprpc}/block?height=${last}  | jq '.result .block .last_commit .signatures[] | select(.validator_address=="${HexAddr}")'.block_id_flag`)
+        console.log("lastblock="+last)
+        if(comfirmblock!=2){
+          propuski++
+          console.log("codeblock: "+comfirmblock)
+        }else{
+          propuski=0
+          console.log("comfirm")
+        }        
+        if(propuski>4){
+          bot.sendMessage(chatId, `Node does not sign blocks`);
+        }
       }
     }
   });
