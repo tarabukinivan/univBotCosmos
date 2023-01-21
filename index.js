@@ -59,14 +59,14 @@ console.log("proposalkey="+propkey)
 
 const publkey = shellexe(`${binf} debug pubkey $(${binf} tendermint show-validator)`)
 const addrval = publkey.split('\n')
-console.log(addrval[0])
+
 if(addrval[0].indexOf("Address:")==-1){
   const rezindex=addrval[0].indexOf("0x")
-  //var HexAddr=addrval[0].substr(rezindex+2);
-  var HexAddr=false;
+  var HexAddr=addrval[0].substr(rezindex+2).toUpperCase();  
 }else{
   var HexAddr=addrval[0].replace("Address:","").trim();
 }
+console.log("Hex="+HexAddr)
 const start = () => {
     bot.on('message', async msg => {
       const text = msg.text;
