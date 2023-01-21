@@ -9,9 +9,12 @@ const cron = require("node-cron");
 const settime = require('./requests/settime')
 const shellexe = require('./requests/func.js')
 const cuttext = require('./requests/cuttext.js')
+var sound = true;
 bot.setMyCommands([
     {command: '/df', description: 'Hard disk information'},
     {command: '/free', description: 'RAM Information'}, 
+    {command: '/mute', description: 'disable notifications'},
+    {command: '/unmute', description: 'enable notifications'},
     {command: '/status', description: 'node status'}, 
     {command: '/logs', description: 'last logs'},
     {command: '/proposals', description: 'proposal list'}, 
@@ -75,6 +78,16 @@ const start = () => {
         let tmp = shellexe('df -h')
         return bot.sendMessage(chatId, 'Disk info:\n\n' + cuttext(tmp));
       }
+
+      if(text === '/mute'){      
+        sound=false
+        return bot.sendMessage(chatId, 'notifications are disabled');
+      }
+
+      if(text === '/unmute'){      
+        sound=true
+        return bot.sendMessage(chatId, 'notifications enabled');
+      }
   
       if(text === '/free'){      
         let tmp = shellexe(`free -h | column -c 110`)
@@ -102,7 +115,9 @@ const start = () => {
   
   start()
   let tmp=0;
-  cron.schedule('*/2 * * * * *', async () => {    
+  
+  cron.schedule('*/2 * * * * *', async () => {   
+    if(sound){     
       tmp = shellexe(`curl -s ${httprpc}/net_info |jq '.result .n_peers'  | xargs`)  
       if(tmp < 2){
         bot.sendMessage(chatId, 'Peers not found. Check the node');
@@ -114,9 +129,9 @@ const start = () => {
       let tmpprop = shellexe(`${binf} query gov proposals -o json --limit=1000 | jq '.proposals[]' | jq -r  '.${propkey} + " %@@@@@% " + .status + " %@@@@@% " + ${proptitle}'`)
       let tmpproparray = tmpprop.split('\n')
       
-      console.log(tmpproparray)
+      //console.log(tmpproparray)
       let tmpproparraylast=tmpproparray[tmpproparray.length-1].split('%@@@@@%')
-      console.log(tmpproparraylast)
+      //console.log(tmpproparraylast)
       let tmpproparraylastInt = parseInt(tmpproparraylast[0])
       if(tmpproparraylastInt > lastprop){
         lastprop = tmpproparraylastInt
@@ -124,4 +139,5 @@ const start = () => {
         bot.sendMessage(chatId, `New propozal ${tmpproparraylastInt} : ${tmpproparraylast[2]}`);
         settime(tmpproparraylastInt,'prop')
       }
-});
+    }
+  });
