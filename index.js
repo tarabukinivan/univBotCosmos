@@ -135,11 +135,11 @@ const start = () => {
       if(tmp < 2){
         bot.sendMessage(chatId, 'Peers not found. Check the node');
       }
-      tmp = shellexe(`${binf} query staking validator -o json --node ${rpc} ${valoper} |jq .jailed`)
+      tmp = shellexe(`${binf} query staking validator -o json --node ${rpc} ${valoper} |jq .jailed 2>&1`)
       if(tmp.trim() == "true"){
         bot.sendMessage(chatId, 'Node jailed');
       }
-      let tmpprop = shellexe(`${binf} query gov proposals -o json --limit=1000 | jq '.proposals[]' | jq -r  '.${propkey} + " %@@@@@% " + .status + " %@@@@@% " + ${proptitle}'`)
+      let tmpprop = shellexe(`${binf} query gov proposals -o json --limit=1000 | jq '.proposals[]' | jq -r  '.${propkey} + " %@@@@@% " + .status + " %@@@@@% " + ${proptitle}' 2>&1`)
       let tmpproparray = tmpprop.split('\n')
       
       //console.log(tmpproparray)
@@ -153,10 +153,10 @@ const start = () => {
         settime(tmpproparraylastInt,'prop')
       }
       
-      let last=shellexe(`${binf} status |jq '.SyncInfo .latest_block_height' | xargs`)
+      let last=shellexe(`${binf} status 2>&1 |jq '.SyncInfo .latest_block_height' | xargs`)
       if(last>lasttmp && HexAddr){
         lasttmp=last
-        comfirmblock=shellexe(`curl -s ${httprpc}/block?height=${last}  | jq '.result .block .last_commit .signatures[] | select(.validator_address=="${HexAddr}")'.block_id_flag`)
+        comfirmblock=shellexe(`curl -s ${httprpc}/block?height=${last}  | jq '.result .block .last_commit .signatures[] | select(.validator_address=="${HexAddr}")'.block_id_flag 2>&1`)
         console.log("lastblock="+last)
         if(comfirmblock!=2){
           propuski++
