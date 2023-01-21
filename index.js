@@ -57,7 +57,7 @@ if('content' in propobj){
 console.log("proptitle="+proptitle)
 console.log("proposalkey="+propkey)
 
-const publkey = shellexe(`${binf} debug pubkey $(${binf} tendermint show-validator)`)
+const publkey = shellexe(`${binf} debug pubkey $(${binf} tendermint show-validator) 2>&1`)
 const addrval = publkey.split('\n')
 
 if(addrval[0].indexOf("Address:")==-1){
