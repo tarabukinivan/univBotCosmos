@@ -59,9 +59,14 @@ console.log("proposalkey="+propkey)
 
 const publkey = shellexe(`${binf} debug pubkey $(${binf} tendermint show-validator)`)
 const addrval = publkey.split('\n')
-const HexAddr=addrval[0].replace("Address:","").trim();
-
-
+console.log(addrval[0])
+if(addrval[0].indexOf("Address:")==-1){
+  const rezindex=addrval[0].indexOf("0x")
+  //var HexAddr=addrval[0].substr(rezindex+2);
+  var HexAddr=false;
+}else{
+  var HexAddr=addrval[0].replace("Address:","").trim();
+}
 const start = () => {
     bot.on('message', async msg => {
       const text = msg.text;
@@ -147,8 +152,9 @@ const start = () => {
         bot.sendMessage(chatId, `New propozal ${tmpproparraylastInt} : ${tmpproparraylast[2]}`);
         settime(tmpproparraylastInt,'prop')
       }
+      
       let last=shellexe(`${binf} status |jq '.SyncInfo .latest_block_height' | xargs`)
-      if(last>lasttmp){
+      if(last>lasttmp && HexAddr){
         lasttmp=last
         comfirmblock=shellexe(`curl -s ${httprpc}/block?height=${last}  | jq '.result .block .last_commit .signatures[] | select(.validator_address=="${HexAddr}")'.block_id_flag`)
         console.log("lastblock="+last)
