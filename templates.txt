@@ -18,7 +18,7 @@
 /bin tx slashing unjail --from {wallet} --fees 500ulava -y
 
 отправка
-/bin tx bank send {wallet} lava@1s9e2a99vjjtwueed3pdgam5q8vqadewev6cfek 1000000aISLM --fees 500ulava -y
+/bin tx bank send {wallet} <кому> 1000000aISLM --fees 500ulava -y
 
 проверка хэша
-/bin q tx  703D72376859C0A68117740AB0615A6F741FBEF3B0FEFF01C74CD1F0C424E300 --node https://lava-testnet-rpc.itrocket.net:443
+/bin q tx  703D72376859C0A68117740AB0615A6F741FBEF3B0FEFF01C74CD1F0C424E300
