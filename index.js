@@ -4,11 +4,13 @@ const bot = new TelegramApi(process.env.BOT_TOKEN, {polling: true})
 const chatId = process.env.CHATID
 const binf = process.env.BIN
 const valoper = process.env.VALOPER
+const pass = process.env.PASSWORD
 let lastprop = parseInt(process.env.LASTPROPOSAL)
 const cron = require("node-cron");
 const settime = require('./requests/settime')
 const shellexe = require('./requests/func.js')
 const cuttext = require('./requests/cuttext.js')
+const templ = require('./requests/gettemplates.js')
 var sound = true;
 
 bot.setMyCommands([
@@ -16,7 +18,8 @@ bot.setMyCommands([
     {command: '/free', description: 'RAM Information'}, 
     {command: '/mute', description: 'disable notifications'},
     {command: '/unmute', description: 'enable notifications'},
-    {command: '/status', description: 'node status'}, 
+    {command: '/status', description: 'node status'},
+    {command: '/template', description: 'show templates'},  
     {command: '/logs', description: 'last logs'},
     {command: '/proposals', description: 'proposal list'}, 
     {command: '/peers', description: 'number of peers'},
@@ -67,6 +70,8 @@ if(addrval[0].indexOf("Address:")==-1){
   var HexAddr=addrval[0].replace("Address:","").trim();
 }
 console.log("Hex="+HexAddr)
+const template=templ();
+
 const start = () => {
     bot.on('message', async msg => {
       const text = msg.text;
@@ -114,9 +119,33 @@ const start = () => {
         return bot.sendMessage(chatId, 'Last Logs:\n\n' + cuttext(tmp,true));
       }
 
+      if(text === '/template'){
+        if(template){
+          console.log('выполнить template')
+          return bot.sendMessage(chatId, cuttext(template,true));
+        }else{
+          console.log('false')
+          return bot.sendMessage(chatId, 'template not found');
+        }
+      }
+
       if(text === '/peers'){
         let tmp = shellexe(`curl -s ${httprpc}/net_info | jq | grep n_peers`)
         return bot.sendMessage(chatId, 'number of peers:\n\n' + tmp);
+      }
+      if(/^\/bin\s/.test(text)){
+        var shtext=text.replace("/bin ", "").trim();
+        if(shtext){
+          console.log("shtext="+shtext)
+          let tmp = shellexe(`echo -e ${pass}"\\ny\\n" | ${binf} ${shtext} 2>&1`)
+          if (tmp) {
+            return bot.sendMessage(chatId, cuttext(tmp,true));
+          }else{
+            return bot.sendMessage(chatId, 'request returned no response');
+          }
+          
+        }  
+        
       }
 
       return bot.sendMessage(chatId, `Unknown command`)

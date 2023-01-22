@@ -1,0 +1,22 @@
+/bin tx gov vote 13 Yes --chain-id lava-testnet-1 --from lava@1pdfnx0qevs3n8dyk5fthelvjm302tqc9t5v6st --fees 0.1ulava -y
+
+/bin  tx distribution withdraw-rewards lava@valoper1pdfnx0qevs3n8dyk5fthelvjm302tqc9lahazu --chain-id lava-testnet-1 --from lava@1pdfnx0qevs3n8dyk5fthelvjm302tqc9t5v6st --commission --fees 8000ulava -y
+
+/bin tx staking delegate lava@valoper1pdfnx0qevs3n8dyk5fthelvjm302tqc9lahazu 7998975000ulava --from lavawallet --chain-id lava-testnet-1 --fees 5000ulava -y
+показать кошелек
+/bin keys list
+
+баланс
+/bin q bank balances lava@1pdfnx0qevs3n8dyk5fthelvjm302tqc9t5v6st
+
+/bin keys show lava@1pdfnx0qevs3n8dyk5fthelvjm302tqc9t5v6st --bech cons
+
+/bin keys show lava@1pdfnx0qevs3n8dyk5fthelvjm302tqc9t5v6st --bech val
+выход из тюрьмы
+/bin tx slashing unjail --from lava@1pdfnx0qevs3n8dyk5fthelvjm302tqc9t5v6st --fees 500ulava -y
+
+отправка
+/bin tx bank send lava@1pdfnx0qevs3n8dyk5fthelvjm302tqc9t5v6st lava@1s9e2a99vjjtwueed3pdgam5q8vqadewev6cfek 1000000aISLM --fees 500ulava -y
+
+проверка хэша
+/bin q tx  703D72376859C0A68117740AB0615A6F741FBEF3B0FEFF01C74CD1F0C424E300 --node https://lava-testnet-rpc.itrocket.net:443
