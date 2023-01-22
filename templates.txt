@@ -21,4 +21,4 @@
 /bin tx bank send {wallet} <кому> 1000000aISLM --fees 500ulava -y
 
 проверка хэша
-/bin q tx  703D72376859C0A68117740AB0615A6F741FBEF3B0FEFF01C74CD1F0C424E300
+/bin q tx  <HASH>
