@@ -4,6 +4,7 @@ const bot = new TelegramApi(process.env.BOT_TOKEN, {polling: true})
 const chatId = process.env.CHATID
 const binf = process.env.BIN
 const valoper = process.env.VALOPER
+const wallet = process.env.WALLET
 const pass = process.env.PASSWORD
 let lastprop = parseInt(process.env.LASTPROPOSAL)
 const cron = require("node-cron");
@@ -43,7 +44,8 @@ if(nodestatus==false){
 
 const rpc = JSON.parse(nodestatus).NodeInfo.other.rpc_address;
 //const rpc=nosst.NodeInfo.other.rpc_address;
-
+const chainid=JSON.parse(nodestatus).NodeInfo.network;
+console.log(chainid)
 const httprpc = rpc.replace("tcp", "http")
 console.log("rpc="+rpc)
 console.log("hrpc="+httprpc)
@@ -70,7 +72,7 @@ if(addrval[0].indexOf("Address:")==-1){
   var HexAddr=addrval[0].replace("Address:","").trim();
 }
 console.log("Hex="+HexAddr)
-const template=templ();
+const template=templ(rpc,httprpc,chainid,valoper,wallet);
 
 const start = () => {
     bot.on('message', async msg => {
