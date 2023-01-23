@@ -5,6 +5,7 @@ const chatId = process.env.CHATID
 const binf = process.env.BIN
 const valoper = process.env.VALOPER
 const wallet = process.env.WALLET
+const denom = process.env.DENOM
 const pass = process.env.PASSWORD
 let lastprop = parseInt(process.env.LASTPROPOSAL)
 const cron = require("node-cron");
@@ -72,7 +73,7 @@ if(addrval[0].indexOf("Address:")==-1){
   var HexAddr=addrval[0].replace("Address:","").trim();
 }
 console.log("Hex="+HexAddr)
-const template=templ(rpc,httprpc,chainid,valoper,wallet);
+const template=templ(rpc,httprpc,chainid,valoper,wallet,denom);
 
 function sleep(ms) {
   return new Promise((resolve) => {
@@ -131,7 +132,7 @@ const start = () => {
       if(text === '/template'){
         if(template){
           console.log('выполнить template')
-          const arrtemplate = template.split("@@@@@")          
+          const arrtemplate = template.split("@@@@@")
           let i=0;
           (async function() {
               while (i<arrtemplate.length-1) {                 
