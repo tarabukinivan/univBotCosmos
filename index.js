@@ -135,7 +135,7 @@ const start = () => {
           const arrtemplate = template.split("@@@@@")
           let i=0;
           (async function() {
-              while (i<arrtemplate.length-1) {                 
+              while (i<arrtemplate.length) {                 
               await sleep(100 * 1);              
               if(arrtemplate[i].trim()!=false){bot.sendMessage(chatId, cuttext(arrtemplate[i],true))} 
               i++;
