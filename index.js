@@ -131,8 +131,7 @@ const start = () => {
       if(text === '/template'){
         if(template){
           console.log('выполнить template')
-          const arrtemplate = template.split("@@@@@")
-          console.log(arrtemplate)
+          const arrtemplate = template.split("@@@@@")          
           let i=0;
           (async function() {
               while (i<arrtemplate.length-1) {                 
