@@ -74,6 +74,13 @@ if(addrval[0].indexOf("Address:")==-1){
 console.log("Hex="+HexAddr)
 const template=templ(rpc,httprpc,chainid,valoper,wallet);
 
+function sleep(ms) {
+  return new Promise((resolve) => {
+      setTimeout(resolve, ms);
+  });
+}
+
+
 const start = () => {
     bot.on('message', async msg => {
       const text = msg.text;
@@ -125,10 +132,16 @@ const start = () => {
         if(template){
           console.log('выполнить template')
           const arrtemplate = template.split("@@@@@")
-          arrtemplate.forEach((val)=>{
-            return bot.sendMessage(chatId, cuttext(val,true));
-          })
-          //return bot.sendMessage(chatId, cuttext(template,true));
+          console.log(arrtemplate)
+          let i=0;
+          (async function() {
+              while (i<arrtemplate.length-1) {                 
+              await sleep(100 * 1);              
+              if(arrtemplate[i].trim()!=false){bot.sendMessage(chatId, cuttext(arrtemplate[i],true))} 
+              i++;
+              }
+          })();
+          return
         }else{
           console.log('false')
           return bot.sendMessage(chatId, 'template not found');
