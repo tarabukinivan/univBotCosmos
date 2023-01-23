@@ -124,7 +124,11 @@ const start = () => {
       if(text === '/template'){
         if(template){
           console.log('выполнить template')
-          return bot.sendMessage(chatId, cuttext(template,true));
+          const arrtemplate = template.split("@@@@@")
+          arrtemplate.forEach((val)=>{
+            return bot.sendMessage(chatId, cuttext(val,true));
+          })
+          //return bot.sendMessage(chatId, cuttext(template,true));
         }else{
           console.log('false')
           return bot.sendMessage(chatId, 'template not found');
