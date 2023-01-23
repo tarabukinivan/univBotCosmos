@@ -1,9 +1,9 @@
 @@@@@
-/bin tx gov vote 13 Yes --chain-id {chainid} --from {wallet} --fees 0.1denom -y
+/bin tx gov vote 13 Yes --chain-id {chainid} --from {wallet} --fees 0.1{denom} -y
 @@@@@
-/bin  tx distribution withdraw-rewards {valoper} --chain-id {chainid} --from {wallet} --commission --fees 8000denom -y
+/bin  tx distribution withdraw-rewards {valoper} --chain-id {chainid} --from {wallet} --commission --fees 8000{denom} -y
 @@@@@
-/bin tx staking delegate {valoper} 7998975000ulava --from {wallet} --chain-id {chainid} --fees 5000denom -y
+/bin tx staking delegate {valoper} 7998975000{denom} --from {wallet} --chain-id {chainid} --fees 5000{denom} -y
 @@@@@
 показать кошелек
 @@@@@
@@ -19,11 +19,11 @@
 @@@@@
 выход из тюрьмы
 @@@@@
-/bin tx slashing unjail --from {wallet} --fees 500denom -y
+/bin tx slashing unjail --from {wallet} --fees 500{denom} -y
 @@@@@
 отправка
 @@@@@
-/bin tx bank send {wallet} <кому> 1000000aISLM --fees 500denom -y
+/bin tx bank send {wallet} <кому> 1000000aISLM --fees 500{denom} -y
 @@@@@
 проверка хэша
 @@@@@
