@@ -141,7 +141,7 @@ const start = () => {
           console.log("shtext="+shtext)
           let tmp = shellexe(`echo -e ${pass}"\\ny\\n" | ${binf} ${shtext} 2>&1`)
           if (tmp) {
-            return bot.sendMessage(chatId, cuttext(tmp,true));
+            return bot.sendMessage(chatId, cuttext(tmp));
           }else{
             return bot.sendMessage(chatId, 'request returned no response');
           }
