@@ -195,6 +195,7 @@ const start = () => {
   let lasttmp=0;
   let comfirmblock=2;
   let propuski=0;
+  let propuskisrpc=0;
   cron.schedule('*/7 * * * * *', async () => {   
     if(sound){     
       tmp = shellexe(`curl -s ${httprpc}/net_info |jq '.result .n_peers'  | xargs`)  
@@ -226,8 +227,11 @@ const start = () => {
         last_customrpc=shellexe(`${binf} status --node ${custom_rpc} 2>&1 |jq '.SyncInfo .latest_block_height' | xargs`)
         console.log("customrpc=",last_customrpc)
         if(Math.abs(last_customrpc-last)>2){
-          bot.sendMessage(chatId, `Блоки вашего РПЦ и CUSTOM_RPC отличаются.\n Ваш: ${last}\nCUSTOM_RPC: ${last_customrpc}`);
+          propuskisrpc++          
+        }else{
+          propuskisrpc=0
         }
+        if(propuskisrpc>4)bot.sendMessage(chatId, `Блоки вашего РПЦ и CUSTOM_RPC отличаются.\n Ваш: ${last}\nCUSTOM_RPC: ${last_customrpc}`);
       }
       ////
       if(last>lasttmp && HexAddr){
