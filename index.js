@@ -53,6 +53,12 @@ const httprpc = rpc.replace("tcp", "http")
 console.log("rpc="+rpc)
 console.log("hrpc="+httprpc)
 const hashrpc=custom_rpc ? custom_rpc : rpc
+let last_customrpc=shellexe(`${binf} status --node ${custom_rpc} 2>&1 |jq '.SyncInfo .latest_block_height' | xargs`)
+if(!last_customrpc){
+  bot.sendMessage(chatId, `CUSTOM_RPC не работает. Бот не сравнивает блоки с CUSTOM_RPC. В случае обновления бот не обнаружит отставания от сети`);
+}else{
+  bot.sendMessage(chatId, `Бот сравнивает блоки ноды с CUSTOM_RPC`);
+}
 console.log("hashrpc="+hashrpc)
 console.log("valoper="+valoper)
 const propcol = shellexe(`${binf} query gov proposals -o json --limit=1 | jq '.proposals[]' | jq -r `)
@@ -176,7 +182,7 @@ const start = () => {
 
       if((/^[A-Z0-9]{64}$/gm).test(text)){
         let tmp = shellexe(`${binf} q tx ${text} --node ${hashrpc} 2>&1`)        
-        return bot.sendMessage(chatId, cuttext(tmp));
+        return bot.sendMessage(chatId, cuttext(tmp,true));
       }
 
       return bot.sendMessage(chatId, `Unknown command`)
@@ -189,7 +195,7 @@ const start = () => {
   let lasttmp=0;
   let comfirmblock=2;
   let propuski=0;
-  cron.schedule('*/4 * * * * *', async () => {   
+  cron.schedule('*/7 * * * * *', async () => {   
     if(sound){     
       tmp = shellexe(`curl -s ${httprpc}/net_info |jq '.result .n_peers'  | xargs`)  
       if(tmp < 2){
@@ -214,8 +220,18 @@ const start = () => {
       }
       
       let last=shellexe(`${binf} status 2>&1 |jq '.SyncInfo .latest_block_height' | xargs`)
+      console.log("last=",last)
+      ////
+      if(last_customrpc){
+        last_customrpc=shellexe(`${binf} status --node ${custom_rpc} 2>&1 |jq '.SyncInfo .latest_block_height' | xargs`)
+        console.log("customrpc=",last_customrpc)
+        if(Math.abs(last_customrpc-last)>2){
+          bot.sendMessage(chatId, `Блоки вашего РПЦ и CUSTOM_RPC отличаются.\n Ваш: ${last}\nCUSTOM_RPC: ${last_customrpc}`);
+        }
+      }
+      ////
       if(last>lasttmp && HexAddr){
-        lasttmp=last
+        lasttmp=last        
         comfirmblock=shellexe(`curl -s ${httprpc}/block?height=${last}  | jq '.result .block .last_commit .signatures[] | select(.validator_address=="${HexAddr}")'.block_id_flag 2>&1`)
         console.log("lastblock="+last)
         if(comfirmblock!=2){
