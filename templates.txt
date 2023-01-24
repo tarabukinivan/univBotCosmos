@@ -24,7 +24,3 @@
 отправка
 @@@@@
 /bin tx bank send {wallet} <кому> 1000000aISLM --fees 500{denom} -y
-@@@@@
-проверка хэша
-@@@@@
-/bin q tx  <HASH>
