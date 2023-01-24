@@ -12,6 +12,7 @@ let lastprop = parseInt(process.env.LASTPROPOSAL)
 const cron = require("node-cron");
 const settime = require('./requests/settime')
 const shellexe = require('./requests/func.js')
+const poiskhash = require('./requests/poiskhash.js')
 const cuttext = require('./requests/cuttext.js')
 const templ = require('./requests/gettemplates.js')
 var sound = true;
@@ -156,20 +157,25 @@ const start = () => {
         return bot.sendMessage(chatId, 'number of peers:\n\n' + tmp);
       }
       if(/^\/bin\s/.test(text)){
-        var shtext=text.replace("/bin ", "").trim();
-        if(shtext){
+        var shtext=text.replace("/bin ", "").trim();        
           console.log("shtext="+shtext)
           let tmp = shellexe(`echo -e ${pass}"\\ny\\n" | ${binf} ${shtext} 2>&1`)
           if (tmp) {
-            return bot.sendMessage(chatId, cuttext(tmp));
+            let hasharr=poiskhash(tmp);
+            console.log(hasharr)
+            if(hasharr){
+              bot.sendMessage(chatId, cuttext(tmp));
+              return bot.sendMessage(chatId, hasharr[hasharr.length-1]);
+            }else{
+              return bot.sendMessage(chatId, cuttext(tmp));
+            }
           }else{
             return bot.sendMessage(chatId, 'request returned no response');
-          }          
-        }
+          } 
       }
 
       if((/^[A-Z0-9]{64}$/gm).test(text)){
-        let tmp = shellexe(`${binf} q tx ${text} --node ${hashrpc} 2>&1`)
+        let tmp = shellexe(`${binf} q tx ${text} --node ${hashrpc} 2>&1`)        
         return bot.sendMessage(chatId, cuttext(tmp,true));
       }
 
