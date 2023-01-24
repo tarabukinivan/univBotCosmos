@@ -5,6 +5,7 @@ const chatId = process.env.CHATID
 const binf = process.env.BIN
 const valoper = process.env.VALOPER
 const wallet = process.env.WALLET
+const custom_rpc = process.env.CUSTOM_RPC
 const denom = process.env.DENOM
 const pass = process.env.PASSWORD
 let lastprop = parseInt(process.env.LASTPROPOSAL)
@@ -50,6 +51,8 @@ console.log(chainid)
 const httprpc = rpc.replace("tcp", "http")
 console.log("rpc="+rpc)
 console.log("hrpc="+httprpc)
+const hashrpc=custom_rpc ? custom_rpc : rpc
+console.log("hashrpc="+hashrpc)
 console.log("valoper="+valoper)
 const propcol = shellexe(`${binf} query gov proposals -o json --limit=1 | jq '.proposals[]' | jq -r `)
 const propobj=JSON.parse(propcol)
@@ -161,10 +164,13 @@ const start = () => {
             return bot.sendMessage(chatId, cuttext(tmp));
           }else{
             return bot.sendMessage(chatId, 'request returned no response');
-          }
-          
-        }  
-        
+          }          
+        }
+      }
+
+      if((/^[A-Z0-9]{64}$/gm).test(text)){
+        let tmp = shellexe(`${binf} q tx ${text} --node ${hashrpc} 2>&1`)
+        return bot.sendMessage(chatId, cuttext(tmp,true));
       }
 
       return bot.sendMessage(chatId, `Unknown command`)
