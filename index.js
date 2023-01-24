@@ -176,7 +176,7 @@ const start = () => {
 
       if((/^[A-Z0-9]{64}$/gm).test(text)){
         let tmp = shellexe(`${binf} q tx ${text} --node ${hashrpc} 2>&1`)        
-        return bot.sendMessage(chatId, cuttext(tmp,true));
+        return bot.sendMessage(chatId, cuttext(tmp));
       }
 
       return bot.sendMessage(chatId, `Unknown command`)
