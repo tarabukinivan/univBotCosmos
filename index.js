@@ -95,6 +95,9 @@ function sleep(ms) {
 const start = () => {
     bot.on('message', async msg => {
       const text = msg.text;
+        if(msg.from.id != chatId){
+        return bot.sendMessage(msg.from.id, 'создайте своего бота, в инструкции написано!');
+      }
       //console.log(msg)
       if(text === '/start'){
         return bot.sendMessage(chatId, `Welcome to bot!\nyour node ${binf}`)
