@@ -251,6 +251,7 @@ const start = () => {
         }        
         if(propuski>4){
           bot.sendMessage(chatId, `Node does not sign blocks`);
+          propuski=0
         }
       }
     }
