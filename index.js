@@ -202,6 +202,7 @@ const start = () => {
   cron.schedule('*/7 * * * * *', async () => {   
     if(sound){
       tmp=''
+        //
       tmp = shellexe(`curl -s ${httprpc}/net_info |jq '.result .n_peers'  | xargs`)  
       if(tmp < 2){
         bot.sendMessage(chatId, 'Peers not found. Check the node');
