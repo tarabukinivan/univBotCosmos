@@ -63,19 +63,15 @@ console.log("hashrpc="+hashrpc)
 console.log("valoper="+valoper)
 const propcol = shellexe(`${binf} query gov proposals -o json --limit=1 | jq '.proposals[]' | jq -r `)
 const propobj=JSON.parse(propcol)
-if(propcol){
-const propobj=JSON.parse(propcol)
 const propkey = Object.keys(propobj)[0]
 let proptitle='';
-  if('content' in propobj){
-    proptitle='.content.title'
-  }else{
-    proptitle='.messages[0].content.title'
-  }
-  console.log("proptitle="+proptitle)
+if('content' in propobj){
+  proptitle='.content.title'
 }else{
-const propkey = 0
+  proptitle='.messages[0].content.title'
 }
+console.log("proptitle="+proptitle)
+console.log("proposalkey="+propkey)
 
 const publkey = shellexe(`${binf} debug pubkey $(${binf} tendermint show-validator) 2>&1`)
 const addrval = publkey.split('\n')
@@ -112,14 +108,9 @@ const start = () => {
         return bot.sendMessage(chatId, 'Validator Info:\n\n' + cuttext(tmp));
       }
 
-     if(text === '/proposals'){
-         if(typeof propkey !== 'undefined'){
-           let tmp = shellexe(`${binf} query gov proposals -o json --limit=1000 | jq '.proposals[]' | jq -r  '.${propkey} + " " + .status +"   "+${proptitle}' `)
+      if(text === '/proposals'){        
+        let tmp = shellexe(`${binf} query gov proposals -o json --limit=1000 | jq '.proposals[]' | jq -r  '.${propkey} + " " + .status +"   "+${proptitle}' `)
         return bot.sendMessage(chatId, 'Proposals:\n\n' + cuttext(tmp,true));
-         }else{
-           return bot.sendMessage(chatId, 'Proposals: not found');
-         }
-        
       }
 
       if(text === '/df'){      
