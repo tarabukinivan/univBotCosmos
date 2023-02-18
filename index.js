@@ -62,17 +62,23 @@ if(!last_customrpc){
 console.log("hashrpc="+hashrpc)
 console.log("valoper="+valoper)
 const propcol = shellexe(`${binf} query gov proposals -o json --limit=1 | jq '.proposals[]' | jq -r `)
-const propobj=JSON.parse(propcol)
-const propkey = Object.keys(propobj)[0]
-let proptitle='';
-if('content' in propobj){
-  proptitle='.content.title'
+var propobj=''
+var propkey=''
+var proptitle='';
+if(propcol && propcol!=''){
+  console.log("зашли")
+  propobj=JSON.parse(propcol)
+  propkey = Object.keys(propobj)[0]  
+  if('content' in propobj){
+    proptitle='.content.title'
+  }else{
+    proptitle='.messages[0].content.title'
+  }
+  console.log("proptitle="+proptitle)
+  console.log("proposalkey="+propkey)
 }else{
-  proptitle='.messages[0].content.title'
+  bot.sendMessage(chatId, 'Ключи пропозала не определены. Перезапустите бота после выхода хотя бы одного пропозала, чтобы определить ключи');
 }
-console.log("proptitle="+proptitle)
-console.log("proposalkey="+propkey)
-
 const publkey = shellexe(`${binf} debug pubkey $(${binf} tendermint show-validator) 2>&1`)
 const addrval = publkey.split('\n')
 
@@ -95,10 +101,10 @@ function sleep(ms) {
 const start = () => {
     bot.on('message', async msg => {
       const text = msg.text;
-        if(msg.from.id != chatId){
-        return bot.sendMessage(msg.from.id, 'создайте своего бота, в инструкции написано!');
-      }
       //console.log(msg)
+      if(msg.from.id != chatId){
+        return bot.sendMessage(msg.from.id, 'создайте своего бота, в инструкции же написано!');
+      }
       if(text === '/start'){
         return bot.sendMessage(chatId, `Welcome to bot!\nyour node ${binf}`)
       }
@@ -108,9 +114,14 @@ const start = () => {
         return bot.sendMessage(chatId, 'Validator Info:\n\n' + cuttext(tmp));
       }
 
-      if(text === '/proposals'){        
-        let tmp = shellexe(`${binf} query gov proposals -o json --limit=1000 | jq '.proposals[]' | jq -r  '.${propkey} + " " + .status +"   "+${proptitle}' `)
-        return bot.sendMessage(chatId, 'Proposals:\n\n' + cuttext(tmp,true));
+      if(text === '/proposals'){  
+        if(propcol && propcol!=''){
+          let tmp = shellexe(`${binf} query gov proposals -o json --limit=1000 | jq \'.proposals[]\' | jq -r  \'.${propkey} + " " + .status +"   "+${proptitle}\' `)
+          return bot.sendMessage(chatId, 'Proposals:\n\n' + cuttext(tmp,true));
+        }else{
+          return bot.sendMessage(chatId, 'Ключи пропозала не определены, перезапустите бота');
+        }     
+        
       }
 
       if(text === '/df'){      
@@ -202,7 +213,6 @@ const start = () => {
   cron.schedule('*/7 * * * * *', async () => {   
     if(sound){
       tmp=''
-        //
       tmp = shellexe(`curl -s ${httprpc}/net_info |jq '.result .n_peers'  | xargs`)  
       if(tmp < 2){
         bot.sendMessage(chatId, 'Peers not found. Check the node');
@@ -252,7 +262,6 @@ const start = () => {
         }        
         if(propuski>4){
           bot.sendMessage(chatId, `Node does not sign blocks`);
-          propuski=0
         }
       }
     }
