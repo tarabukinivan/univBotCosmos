@@ -210,7 +210,7 @@ const start = () => {
   let comfirmblock=2;
   let propuski=0;
   let propuskisrpc=0;
-  cron.schedule('*/7 * * * * *', async () => {   
+  cron.schedule('*/10 * * * * *', async () => {   
     if(sound){
       tmp=''
       tmp = shellexe(`curl -s ${httprpc}/net_info |jq '.result .n_peers'  | xargs`)  
