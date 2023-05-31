@@ -23,4 +23,4 @@
 @@@@@
 отправка
 @@@@@
-/bin tx bank send {wallet} <кому> 1000000aISLM --fees 500{denom} -y
+/bin tx bank send {wallet} <кому> 1000000{denom} --fees 500{denom} -y
