@@ -253,7 +253,7 @@ const start = () => {
         lasttmp=last        
         comfirmblock=shellexe(`curl -s ${httprpc}/block?height=${last}  | jq '.result .block .last_commit .signatures[] | select(.validator_address=="${HexAddr}")'.block_id_flag 2>&1`)
         console.log("lastblock="+last)
-        if(comfirmblock!=2){
+        if((comfirmblock!=3)&&(comfirmblock!=2)){
           propuski++
           console.log("codeblock: "+comfirmblock)
         }else{
