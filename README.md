@@ -10,11 +10,11 @@ sudo apt update && sudo apt upgrade -y
 2. скачиваем репозиторий
 ```
 cd
-git clone https://github.com/tarabukinivan/univBotNeutron.git
-если нужно переименовать папку univBotNeutron в другую можно например, так:
-git clone https://github.com/tarabukinivan/univBotNeutron.git marsbot
+git clone https://github.com/tarabukinivan/univBotCosmos.git
+если нужно переименовать папку univBotCosmos в другую можно например, так:
+git clone https://github.com/tarabukinivan/univBotCosmos.git marsbot
 второй бот
-git clone https://github.com/tarabukinivan/univBotNeutron.git nibidbot
+git clone https://github.com/tarabukinivan/univBotCosmos.git nibidbot
 и т.д.
 ```
 3. Устанавливаем nodejs и npm, если не установлено
@@ -29,7 +29,7 @@ echo -e "\nnodejs > $(node --version).\nnpm  >>> v$(npm --version).\n"
 
 4. переходим в папку проекта (если не переимоновали)
 ```
-cd /$USER/univBotNeutron
+cd /$USER/univBotCosmos
 ```
 5. устанавливаем необходимые модули
 ```
