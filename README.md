@@ -9,6 +9,7 @@ sudo apt update && sudo apt upgrade -y
 ```
 2. скачиваем репозиторий
 ```
+sudo apt update && sudo apt install jq -y && sudo apt install npm -y && sudo npm install pm2 -g && pm2 update
 cd
 git clone https://github.com/tarabukinivan/univBotCosmos.git
 если нужно переименовать папку univBotCosmos в другую можно например, так:
