@@ -85,4 +85,19 @@ pm2 stop index
  '/peers' - количество пиров
  '/infoval' - информация о операторе
 ```
+Примечание:
+На warden NodeInfo поменять на node_info в 2-3 местах
+SyncInfo на sync_info
+query gov proposals -o json --limit=1 на query gov proposals -o json --page-limit=1
 
+if('content' in propobj){
+    proptitle='.content.title'
+  }else{
+    proptitle='.messages[0].content.title'
+  } na proptitle=propobj.title
+
+
+ let tmp = shellexe(`${binf} query gov proposals -o json --page-limit=1000 | jq \'.proposals[]\' | jq -r  \'.${propkey} + " " + .status +"   "+${proptitle}\' `)
+ na
+ let tmp = shellexe(`${binf} query gov proposals -o json --page-limit=1000 | jq \'.proposals[]\' | jq -r  .title`)
+  
